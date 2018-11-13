@@ -20,10 +20,10 @@ export default {
   },
   canDoubleDown (state) {
     return true
-    if (state.bank < state.settings.minimumBet) return false
-    if (!state.hands.length || !state.activeHandIndex) return false
-    const cards = state.hands[state.activeHandIndex].cards
-    return cards.length === 2
+    // if (state.bank < state.settings.minimumBet) return false
+    // if (!state.hands.length || !state.activeHandIndex) return false
+    // const cards = state.hands[state.activeHandIndex].cards
+    // return cards.length === 2
   },
   basicStrategyMove (state) {
     if (!state.hands.length || !state.activeHandIndex || !state.hands[state.activeHandIndex]) return
