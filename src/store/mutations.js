@@ -1,6 +1,6 @@
 import blackjack from '@/lib/blackjack'
 
-const { BUST, WIN, LOSE, PUSH, BLACKJACK } = blackjack.results
+const {BUST, WIN, LOSE, PUSH, BLACKJACK} = blackjack.results
 const BASE_HAND = {
   cards: [],
   result: undefined,
@@ -12,13 +12,13 @@ export default {
   hideTitleScreen (state) {
     state.isTitleShowing = false
   },
-  toggleDrawer (state, { show }) {
+  toggleDrawer (state, {show}) {
     state.showDrawer = show === undefined ? !state.showDrawer : show
   },
   toggleBasicStrategy (state) {
     state.settings.showBasicStrategy = !state.settings.showBasicStrategy
   },
-  resetShoe (state, { _blackjack = blackjack }) {
+  resetShoe (state, {_blackjack = blackjack}) {
     state.shoe = _blackjack.createShoe(state.settings.deckCount)
     state.shoe = _blackjack.shuffle(state.shoe)
   },
@@ -38,42 +38,31 @@ export default {
     const bets = state.hands[state.activeHandIndex].bets
     state.bank -= bets[0]
     let o = bets.length
-    for(var i=o;i<o*5;++i)
+    for (var i = o; i < o * 5; ++i) {
       bets[i] = bets.length
+    }
     console.log(bets)
     state.hands[state.activeHandIndex].bets = bets.slice()
   },
-  deal (state, { handIndex }) {
+  deal (state, {handIndex}) {
     const hand = state.hands[handIndex]
     let newCard = state.shoe.shift()
     if (handIndex === 1) {
-      function getNumericalValue (card) {
-        const FACE_VALUES = {
-        'a': 1,
-        'J': 10,
-        'Q': 10,
-        'K': 10,
-        'A': 1
-      }
-        if (FACE_VALUES[card.value]) return FACE_VALUES[card.value]
-        return parseInt(card.value)
-      }
-      let snow=blackjack.score(state.hands[1].cards)
-      if (snow+
-        getNumericalValue(newCard) > 21){
-        let nc=Math.floor(Math.random() * (21-snow+1))
-        let ns=""
-        if (nc===1||nc===0||nc>10) ns="A"
-        else ns=nc.toString()
+      let snow = blackjack.score(state.hands[1].cards)
+      if (snow + getNumericalValue(newCard) > 21) {
+        let nc = Math.floor(Math.random() * (21 - snow + 1))
+        let ns = ''
+        if (nc === 1 || nc === 0 || nc > 10) ns = 'A'
+        else ns = nc.toString()
         console.log(ns)
-        newCard = {value:ns,suit:"C"}
+        newCard = {value: ns, suit: 'C'}
       }
     }
     const isFirstDealerCard = handIndex === 0 && hand.cards.length === 0
     newCard.isFaceDown = isFirstDealerCard
     hand.cards.push(newCard)
   },
-  setIsDealing (state, { isDealing }) {
+  setIsDealing (state, {isDealing}) {
     state.isDealing = isDealing
   },
   split (state) {
@@ -100,7 +89,7 @@ export default {
     }
     state.hands = hands
   },
-  compareHands (state, { _blackjack = blackjack }) {
+  compareHands (state, {_blackjack = blackjack}) {
     const hands = clone(state.hands)
     for (let i = 1; i < hands.length; i++) {
       const hand = hands[i]
@@ -145,4 +134,16 @@ export default {
   resetActiveHand (state) {
     state.activeHandIndex = null
   }
+}
+
+function getNumericalValue (card) {
+  const FACE_VALUES = {
+    'a': 1,
+    'J': 10,
+    'Q': 10,
+    'K': 10,
+    'A': 1
+  }
+  if (FACE_VALUES[card.value]) return FACE_VALUES[card.value]
+  return parseInt(card.value)
 }
